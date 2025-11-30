@@ -34,14 +34,14 @@ Is file >400 lines?
 **Decision Flow:**
 ```
 Is dependency in approved list?
-├─ YES → Use it (docs/DEPENDENCIES.md)
+├─ YES → Use it (check docs/DEPENDENCIES.md if it exists)
 │
 └─ NO → Ask user
           - Check if alternative exists
           - Consider maintenance burden
-          - Document in DEPENDENCIES.md if approved
+          - Document in docs/DEPENDENCIES.md if approved
 ```
-**Reference:** `docs/DEPENDENCIES.md` for approved dependencies
+**Reference:** `docs/DEPENDENCIES.md` for approved dependencies (create this file if it doesn't exist)
 ---
 ## Should I create an implementation plan?
 **Decision Flow:**

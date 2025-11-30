@@ -207,18 +207,18 @@
 
 **REQUIRED:**
 
-- ✅ Run `make fix` before committing (auto-fixes linting, formatting)
+- ✅ Run `make pre-commit` before committing (or your project's equivalent)
 - ✅ Check commit command exit status before pushing
 - ✅ If hooks fail (exit 1), re-stage auto-fixed files and amend commit
-- ✅ Read hook output for warnings (version tags, missing make commands)
+- ✅ Read hook output for warnings
 
 **Why:** Pre-commit hooks auto-fix files but don't stage them. Pushing without verification = incomplete commits or broken code.
 
 **Correct Workflow:**
 
 ```bash
-# Step 1: Fix auto-fixable issues
-make fix
+# Step 1: Run pre-commit checks
+make pre-commit
 
 # Step 2: Stage and commit
 git add -A
@@ -241,7 +241,6 @@ git push origin <branch>
 
 **Tools:**
 
-- `make fix` - Run auto-formatters and linters before commit (if available)
 - `make pre-commit` - Run all pre-commit hooks manually
 - Check your project's Makefile for additional commit verification tools
 

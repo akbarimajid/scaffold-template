@@ -64,7 +64,6 @@ Quick reference for task workflows. **See `docs/CHECKLISTS.md` for comprehensive
 
 ```bash
 # 1. Prepare code (MANDATORY)
-make fix          # Auto-fix linting/formatting
 make pre-commit   # Verify all checks pass
 
 # 2. Stage changes
@@ -171,28 +170,10 @@ git push 2>&1 | tail -5
 - [ ] **Makefile:** New script? → Add `make {name}` command
 - [ ] **README.md:** User-facing changes? → Update relevant section
 - [ ] **CHANGELOG.md:** Notable changes? → Add entry
-- [ ] **GitHub Workflows:** New validation/env var? → Update workflows
-- [ ] **Daily Scripts:** Affects workflow? → Update relevant automation scripts
-- [ ] **Documentation:** HOW_IT_WORKS.md, CLAUDE.md, FRAMEWORK.md if applicable
 - [ ] **Institutional Memory:** DECISIONS.md, LESSONS_LEARNED.md, shadow_memory.md
 
 ---
 
-## Issue Management
-
-**Create issues for:** Bugs, unexpected behavior, critical problems, reproducible failures  
-**Don't create issues for:** Feature requests, minor improvements, docs (create tasks directly)
-
-**Process:**
-1. Copy template: `cp issues/ISSUE_TEMPLATE.md issues/NNN-short-name.md`
-2. Fill sections (summary, impact, description, steps, evidence, solution)
-3. Add to `issues/ISSUES.md` index
-4. Create task if needed (cross-reference)
-5. Commit: `git commit -m "docs: add Issue #NNN" --no-verify`
-
-**Resolving:** Update issue status, move to "Resolved" in index, update related task
-
----
 
 ## ⚠️ CRITICAL: Enforcement Rules
 
@@ -211,19 +192,16 @@ git push 2>&1 | tail -5
 
 Quick checklist for all tasks:
 
-- [ ] **Code quality:** Run `make pre-commit` (black, flake8)
-- [ ] **Tests:** Run `uv run pytest` if code changes
-- [ ] **Architecture:** Run `make check-architecture` if touching core/
-- [ ] **Coverage:** Run `make test-cov-critical` if critical path (90% required)
+- [ ] **Code quality:** Run `make pre-commit` to verify all checks pass
+- [ ] **Tests:** Run your project's test suite if code changes
 - [ ] **Makefile:** Add command if new script created
 - [ ] **README:** Update if user-facing changes
 - [ ] **CHANGELOG:** Add entry for notable changes
-- [ ] **Token limits:** CLAUDE.md <600, README.md <400
-- [ ] **BACKLOG:** Move task to completed
+- [ ] **Institutional Memory:** Update DECISIONS.md, LESSONS_LEARNED.md, shadow_memory.md
+- [ ] **BACKLOG:** Task will be moved to completed automatically via `make task-complete`
 - [ ] **Commit:** Use format `{type}: {description} (Task {N})`
 
-**Architecture rules:** See `docs/policies/AI_AGENTS.md`  
-**For comprehensive checklist (P0/P1 only):** `docs/CHECKLINES.md`
+**Architecture rules:** See `docs/policies/AI_AGENTS.md`
 
 ---
 
@@ -241,13 +219,8 @@ Quick checklist for all tasks:
 ## Reference
 
 - **Architecture rules:** `docs/policies/AI_AGENTS.md` ⭐ (Universal for all AI agents)
-- **Detailed checklists:** `docs/CHECKLISTS.md`
 - **Task template:** `tasks/TEMPLATE.md`
 - **Task backlog:** `tasks/BACKLOG.md`
-- **Project guide:** `CLAUDE.md`
-- **Framework:** `FRAMEWORK.md`
-- **Architecture:** `docs/policies/ARCHITECTURE.md`
-
----
-
-**Total: ~200 lines** (down from 466, 57% reduction)
+- **Session start guide:** `docs/policies/AI_SESSION_START.md`
+- **Decisions:** `docs/DECISIONS.md`
+- **Lessons learned:** `docs/LESSONS_LEARNED.md`

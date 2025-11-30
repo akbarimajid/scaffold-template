@@ -6,34 +6,47 @@
 
 ---
 
-## 🎯 Core Architecture (3-Layer Design)
+## 🎯 Core Architecture
+
+**Design your project with clear layer separation:**
 
 ```
-scripts/ (Presentation) → core/domain/ (Business Logic) → core/adapters/ (External Systems)
+Presentation Layer → Business Logic Layer → Infrastructure/Adapters Layer
 ```
 
 **Layer Rules:**
-- ❌ Scripts MUST NOT import from `core/adapters/`
-- ❌ Domain MUST NOT import from `scripts/`
+- ❌ Presentation layer MUST NOT import from Infrastructure layer
+- ❌ Business logic MUST NOT import from Presentation layer
 - ✅ Use dependency injection for critical paths
+- ✅ Keep layers loosely coupled
+
+**Example structure:**
+- `src/` or `app/` - Presentation (API routes, CLI, UI)
+- `core/` or `domain/` - Business logic (pure functions, domain models)
+- `adapters/` or `infrastructure/` - External systems (databases, APIs, file I/O)
 
 ---
 
 ## 🧪 Testing Requirements
 
-| Module | Coverage | Enforcement |
-|--------|----------|-------------|
-| `core/domain/logic.py` | 90%+ | Pre-commit |
-| `core/domain/risk.py` | 90%+ | Pre-commit |
-| `core.adapters.external_api.py` | 90%+ | Pre-commit |
-| `core/state/manager.py` | 90%+ | Pre-commit |
-| Other modules | 50%+ | CI |
+**Coverage Guidelines:**
+- **Critical paths** (business logic, state management, security): 90%+ coverage
+- **Other modules:** 50%+ coverage
+- **External dependencies:** Always mock in tests
+
+**Testing Best Practices:**
+- Mock all external APIs, databases, and file I/O
+- Test business logic in isolation
+- Use integration tests for critical workflows
+- Keep tests fast and independent
 
 **Commands:**
 ```bash
-make test                    # Run all tests
-make test-cov-critical       # Check 90% coverage
-make check-architecture      # Validate architecture
+# Run your project's test suite
+# Add these to your Makefile based on your testing framework
+# Example for Python:
+# make test                    # Run all tests
+# make test-cov               # Check coverage
 ```
 
 ---
@@ -55,26 +68,31 @@ make check-architecture      # Validate architecture
 
 
 3. **Run checks before commit:**
-   - [ ] **ALWAYS run `make fix` before `git commit`** (fixes linting 90% of the time)
-   - [ ] `make check-architecture` passes
-   - [ ] `make test-cov-critical` passes (if critical path)
-   - [ ] `make pre-commit` passes
+   - [ ] `make pre-commit` passes (or your project's equivalent)
+   - [ ] Tests pass (if code changes)
+   - [ ] Architecture validation passes (if applicable)
 
 ---
 
 ## 🚀 Mode Selection (Step 0)
 
-**AI Agent:** Read the `**Mode:**` field from the task file. Prompt the user with:
+**AI Agent:** Read the `**Mode:**` field from the task file. The mode depends on your AI tool:
 
+**For thinking models (Claude, GPT-4, etc.):**
+- **Fast:** Execute chunks directly (skip detailed planning)
+- **Planning:** Create `implementation_plan.md` first, then execute
+
+**For non-thinking models or agent modes (Cursor Agent, etc.):**
+- **Fast:** Use agent/auto mode for direct execution
+- **Planning:** Use plan/planning mode to create detailed plan first
+
+**Prompt the user:**
 ```
 📋 Mode: [Fast/Planning] – please confirm to proceed.
-Reply `Ready` when you have switched the agent to the indicated mode.
+Reply `Ready` when you have switched to the indicated mode.
 ```
 
-- **Fast:** Execute chunks directly (skip `implementation_plan.md`).
-- **Planning:** Create `implementation_plan.md` first.
-
-**User must approve mode switch before any work begins.** Token savings: 500‑1000 per Fast task.
+**User must approve mode switch before any work begins.**
 
 
 ## �🔧 Git Operations (Token-Optimized)
@@ -120,54 +138,54 @@ Pre-commit hooks validate workflow compliance automatically. Follow task workflo
 
 ## 🚫 Common Violations & Fixes
 
-### ❌ Script Importing Adapter
+### ❌ Layer Violation
 ```python
-# WRONG
-from core.adapters.external_api import ExternalServiceAdapter
-adapter = ExternalServiceAdapter()
+# WRONG - Presentation importing from Infrastructure
+from adapters.database import DatabaseAdapter
+adapter = DatabaseAdapter()
 
-# CORRECT
-from core.domain.logic import create_executor
-executor = create_trade_executor()  # Factory handles DI
+# CORRECT - Use dependency injection
+from domain.service import create_service
+service = create_service(adapter)  # Factory handles DI
 ```
 
 ### ❌ Hardcoded Dependency
 ```python
 # WRONG
-class PositionManager:
+class UserService:
     def __init__(self):
-        self.client = TradingClient(...)  # Hardcoded!
+        self.db = DatabaseClient(...)  # Hardcoded!
 
 # CORRECT
-class PositionManager:
-    def __init__(self, adapter: TradingAdapter):
-        self.adapter = adapter  # Injected!
+class UserService:
+    def __init__(self, db_adapter: DatabaseAdapter):
+        self.db = db_adapter  # Injected!
 ```
 
 ### ❌ Silent Failure
 ```python
 # WRONG
 try:
-    order = place_order(symbol)
+    result = process_data(data)
 except Exception:
     pass  # Silent failure!
 
 # CORRECT
 try:
-    order = place_order(symbol)
-except OrderExecutionError as e:
-    logger.error("Order failed", error=str(e), symbol=symbol)
+    result = process_data(data)
+except ProcessingError as e:
+    logger.error("Processing failed", error=str(e), data=data)
     raise  # Re-raise, don't swallow
 ```
 
-### ❌ Direct State Write
+### ❌ Direct State Write (Bypassing Abstraction)
 ```python
 # WRONG
-with open("data/positions/current.json", "w") as f:
-    json.dump(positions, f)
+with open("data/state.json", "w") as f:
+    json.dump(state, f)
 
 # CORRECT
-state_manager.update_positions(positions)
+state_manager.update_state(state)
 state_manager.save()
 ```
 
@@ -188,7 +206,8 @@ state_manager.save()
 
 ### After Implementation
 1. **Integration checklist** - See `tasks/GUIDELINES.md`
-2. **Architecture validation** - `make check-architecture`
+2. **Run tests** - Ensure all tests pass
+3. **Update documentation** - DECISIONS.md, LESSONS_LEARNED.md, shadow_memory.md
 3. **Update task** - Mark complete, add notes
 4. **Update BACKLOG.md** - Move to completed section
 
@@ -197,13 +216,13 @@ state_manager.save()
 ## 🔗 Full Documentation
 
 **Need more details?**
-- **Physical organization:** [FRAMEWORK.md](../../FRAMEWORK.md)
-- **Architecture design:** [ARCHITECTURE.md](ARCHITECTURE.md)
-- **Detailed enforcement:** [ARCHITECTURE_RULES.md](ARCHITECTURE_RULES.md)
-- **Testing strategy:** [VERIFICATION_PLAN.md](VERIFICATION_PLAN.md)
 - **Task workflow:** [tasks/GUIDELINES.md](../../tasks/GUIDELINES.md)
 - **Session start guide:** [AI_SESSION_START.md](AI_SESSION_START.md)
+- **Architectural decisions:** [docs/DECISIONS.md](../../docs/DECISIONS.md)
+- **Lessons learned:** [docs/LESSONS_LEARNED.md](../../docs/LESSONS_LEARNED.md)
+- **Enforcement rules:** [.ai/enforcement_rules.md](../../.ai/enforcement_rules.md)
+- **Decision tree:** [.ai/decision_tree.md](../../.ai/decision_tree.md)
 
 ---
 
-**Token-optimized for AI agents | Last Updated: 2025-11-22**
+**Token-optimized for AI agents | Last Updated: 2025-11-30**

@@ -20,7 +20,7 @@
 > - **If ANY item missing → Task NOT complete. Fix NOW.**
 
 ---
-**Last Updated:** 2025-11-22 (Added Shadow AI system)
+**Last Updated:** 2025-11-30
 
 ---
 
@@ -96,11 +96,11 @@ cat docs/LESSONS_LEARNED.md
 **Architecture Details:**
 
 ```bash
-cat docs/policies/ARCHITECTURE.md
+cat docs/DECISIONS.md
 ```
 
-**When:** Implementing architecture changes (Tasks 65-67)  
-**Token cost:** ~600 tokens
+**When:** Making architectural decisions or reviewing past choices  
+**Token cost:** ~300 tokens
 
 ---
 
@@ -110,29 +110,29 @@ cat docs/policies/ARCHITECTURE.md
 
 **Load:** Shadow memory + task file  
 **Tokens:** 200 + 200 = **400 tokens**  
-**Example:** "Continue Task 70 (Market Regime Filter)"
+**Example:** "Continue Task 5 (User Authentication)"
 
 ### Scenario 2: Start New Task (Routine)
 
 **Load:** Shadow memory + AI_AGENTS.md + task file  
 **Tokens:** 200 + 150 + 200 = **550 tokens**  
-**Example:** "Start Task 75 (Observability Dashboard)"
+**Example:** "Start Task 6 (Add Payment Integration)"
 
 ### Scenario 3: Start Complex Task (Architecture)
 
-**Load:** Shadow memory + AI_AGENTS.md + DECISIONS.md + ARCHITECTURE.md + task file  
-**Tokens:** 200 + 150 + 300 + 600 + 200 = **1450 tokens**  
-**Example:** "Start Task 66 (Architecture Migration Phase 1)"
+**Load:** Shadow memory + AI_AGENTS.md + DECISIONS.md + task file  
+**Tokens:** 200 + 150 + 300 + 200 = **850 tokens**  
+**Example:** "Start Task 7 (Database Migration)"
 
 ### Scenario 4: Strategic Decision-Making
 
 **Load:** Shadow memory + DECISIONS.md + LESSONS_LEARNED.md  
 **Tokens:** 200 + 300 + 400 = **900 tokens**  
-**Example:** "Should we add a new strategy?"
+**Example:** "Should we refactor the API layer?"
 
 ---
 
-## Shadow AI System (NEW - 2025-11-22)
+## Shadow AI System
 
 ### The Problem It Solves
 
@@ -143,54 +143,19 @@ cat docs/policies/ARCHITECTURE.md
 
 **Institutional Memory:**
 
-- `.ai/shadow_memory.md` - Your persistent context (team level, decisions, lessons, priorities)
+- `.ai/shadow_memory.md` - Your persistent context (project state, decisions, lessons, priorities)
 - `docs/DECISIONS.md` - Major decisions with rationale (why choices were made)
 - `docs/LESSONS_LEARNED.md` - Wisdom from every task (what worked, what didn't)
 
 **After each task:**
 
 1. Update `LESSONS_LEARNED.md` with learnings
-2. Update `shadow_memory.md` with new patterns
+2. Run `make update-shadow-memory task={N}` to automatically extract patterns
 3. Add major decisions to `DECISIONS.md`
 
 **Result:** Each session builds on the last, no knowledge loss
 
-### Evolution Tracking
-
-**Current Level:**
-
-- Software: 9/10 (Senior)
-- Trading: 6/10 (Junior-Mid)
-
-**Target Level:**
-
-- Software: 10/10 (Principal) - proactive, self-improving
-- Trading: 9/10 (Senior) - multi-strategy, portfolio optimization
-
----
-
-## User Preferences (From Shadow Memory)
-
-- ✅ Values **honest feedback** over cheerleading
-- ✅ Appreciates **token optimization**
-- ✅ **"Least worst" philosophy** (pragmatic > perfect)
-- ✅ Expects **proactive updates** (CHANGELOG, README without asking)
-- ✅ Tests AI with intentional challenges
-
----
-
-## Current Priorities (From Shadow Memory)
-
-### P0 - Critical (Do First)
-
-- Task 70: Market Regime Filter 🚨
-- Task 71: Position Sizing & Correlation 🚨
-- Task 73: Multi-Strategy Validation 🚨
-
-### P1 - Important
-
-- Task 75: Production Observability
-- Task 72: Pre-Trade Filters
+**Automation:** The workflow automatically maintains shadow memory - you don't need to manually update it for every task. Use `make update-shadow-memory task={N}` after completing tasks with significant learnings.
 
 ---
 
@@ -208,8 +173,8 @@ cat docs/policies/ARCHITECTURE.md
 
 ### If User Says: "Review architecture"
 
-**Load:** Shadow memory + ARCHITECTURE.md + DECISIONS.md (1100 tokens)  
-**Reason:** Need full architecture context
+**Load:** Shadow memory + DECISIONS.md (500 tokens)  
+**Reason:** Need architectural decision context
 
 ### If User Says: "What should I work on?"
 
@@ -220,17 +185,11 @@ cat docs/policies/ARCHITECTURE.md
 
 ## Critical Philosophy
 
-**"Least Worst Architecture"**
+**"Pragmatic Over Perfect"**
 
 - Simple > Complex
-- Pragmatic > Perfect
 - Ship in weeks > Perfect in months
-
-**Honest Assessment**
-
-- Software: 9/10 (excellent)
-- Trading: 6/10 (needs work)
-- Don't go live until multi-strategy validation (60 more days)
+- Iterate based on feedback
 
 ---
 
@@ -242,17 +201,6 @@ cat docs/policies/ARCHITECTURE.md
 
 **Start every session by reading `.ai/shadow_memory.md` first. Everything else is on-demand.**
 
-# 2. Verify architecture tests exist
-
-make check-architecture
-
-# If fails, Task 65 not complete yet
-
-# 3. Check coverage requirements
-
-# Needed if touching critical paths
-
-```
 
 ---
 
@@ -264,12 +212,12 @@ make check-architecture
 - **Start coding immediately**
 
 ### Medium Session (500 tokens)
-- Minimal + FRAMEWORK.md (~275 lines)
-- When organizing files or creating new directories
+- Minimal + DECISIONS.md (~300 lines)
+- When making architectural decisions or reviewing past choices
 
-### Deep Session (1000+ tokens)
-- Medium + ARCHITECTURE.md (~500 lines)
-- Only for architectural decisions or major refactoring
+### Deep Session (800+ tokens)
+- Medium + LESSONS_LEARNED.md (~400 lines)
+- Only for strategic decisions or learning from past work
 
 **Rule:** Load only what you need, when you need it.
 
@@ -281,26 +229,17 @@ make check-architecture
 ```
 
 Read: Task file + AI_AGENTS.md
-Don't need: ARCHITECTURE.md (rules already in AI_AGENTS.md)
-Token cost: ~200 lines
+Don't need: Architecture docs (rules already in AI_AGENTS.md)
+Token cost: ~350 lines
 
 ```
 
 ### Architecture Work
 ```
 
-Read: Task file + AI_AGENTS.md + ARCHITECTURE.md
+Read: Task file + AI_AGENTS.md + DECISIONS.md
 Need: Full design context
-Token cost: ~600 lines
-
-```
-
-### File Organization
-```
-
-Read: Task file + AI_AGENTS.md + FRAMEWORK.md
-Need: Directory structure rules
-Token cost: ~400 lines
+Token cost: ~650 lines
 
 ```
 
@@ -321,7 +260,7 @@ Token cost: ~200 lines
 - [ ] AI_AGENTS.md read? (Required)
 - [ ] Blocking dependencies checked? (Required)
 - [ ] Other docs needed? (On-demand only)
-- [ ] Architecture tests run? (If touching core/)
+- [ ] Architecture validation run? (If applicable to your project)
 - [ ] Ready to start coding? (Yes!)
 
 ---
@@ -339,5 +278,4 @@ Token cost: ~200 lines
 
 ---
 
-**Last Updated:** 2025-11-22  
-**Token-optimized for AI efficiency**
+**Last Updated:** 2025-11-30

@@ -22,7 +22,8 @@ AI coding tools lose context after 1 session. This system preserves 100% context
 
 1. **Clone this repo**
 2. **Setup:** Follow [SETUP.md](SETUP.md) for detailed installation instructions
-3. **Read Context:** Read `.ai/shadow_memory.md` to understand the system (fill in your project details)
+3. **Read Context:** Read `.ai/shadow_memory.md` to understand the system
+   - **AI agents can auto-update it:** See [docs/AI_AUTO_UPDATE_SHADOW_MEMORY.md](docs/AI_AUTO_UPDATE_SHADOW_MEMORY.md) for a prompt you can give your AI agent to automatically fill in project details
 4. **Create Task:** Copy `tasks/TEMPLATE.md` to `tasks/01-pending-my-feature.md`
 5. **Start Building:** Use your AI agent (Cursor, Windsurf, etc.) to execute the task
 6. **Update Memory:** After completing tasks, run `make update-shadow-memory task={N}` to extract patterns and lessons
