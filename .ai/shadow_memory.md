@@ -61,14 +61,15 @@
 
 ## How to Maintain This File
 
-**When to update:**
-- After completing tasks with new patterns or lessons
-- When making major architectural decisions
-- When identifying critical mistakes to avoid
+**The workflow does the heavy lifting for you:**
 
-**How to update:**
-- **Manual:** Add entries directly to relevant sections
-- **Automated:** Run `make update-shadow-memory task={N}` after completing a task (extracts from completion notes)
+- **Automated updates:** After completing tasks, run `make update-shadow-memory task={N}` to automatically extract patterns and lessons from completion notes
+- **Manual updates:** Only needed for major architectural decisions or when automation doesn't capture everything
+
+**When to update:**
+- After completing tasks with new patterns or lessons (use automation)
+- When making major architectural decisions (add to DECISIONS.md, reference here)
+- When identifying critical mistakes to avoid (add to "Critical Mistakes to Never Repeat" section)
 
 **What makes a good entry:**
 - ✅ Specific and actionable (not vague)
@@ -78,9 +79,9 @@
 
 **What to avoid:**
 - ❌ Vague statements ("be careful with X")
-- ❌ Duplicate entries (check before adding)
+- ❌ Duplicate entries (automation checks for duplicates)
 - ❌ Overly detailed explanations (link to docs instead)
 
 ---
 
-**Remember:** This file is your AI team's institutional memory. Keep it current, specific, and actionable.
+**Remember:** The automation (`make update-shadow-memory`) handles most updates. You only need to manually add major decisions or critical patterns that aren't captured in completion notes.

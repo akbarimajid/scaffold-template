@@ -48,6 +48,7 @@ make pre-commit
 
 ### 4. Create Your First Task
 
+**Option A: Manual Creation**
 ```bash
 # Copy the template
 cp tasks/TEMPLATE.md tasks/01-pending-my-first-feature.md
@@ -56,6 +57,12 @@ cp tasks/TEMPLATE.md tasks/01-pending-my-first-feature.md
 # Then start it
 make task-start N=1
 ```
+
+**Option B: AI-Assisted Creation (Recommended)**
+- Use your AI agent's **planning/plan mode** (Cursor, Windsurf, etc.)
+- Give it the task template and your feature idea
+- The AI will create a detailed task file with all required sections
+- Then start it: `make task-start N=1`
 
 ### 5. Start Building
 
