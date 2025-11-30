@@ -1,5 +1,8 @@
 # Scaffold Template
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+
 **Build your MVP with AI that never forgets**
 
 This template implements the **Shadow AI system** - institutional memory for AI-assisted development.
@@ -32,4 +35,22 @@ AI coding tools lose context after 1 session. This system preserves 100% context
 
 ## Battle-Tested
 
-Built a production production system in 58 tasks with zero knowledge loss using this exact framework.
+Built a production system in 58 tasks with zero knowledge loss using this exact framework.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contributing
+
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## Support
+
+- 📖 [Documentation](SETUP.md)
+- 💬 [GitHub Discussions](https://github.com/akbarimajid/scaffold-template/discussions)
+- 🐛 [Report Issues](https://github.com/akbarimajid/scaffold-template/issues)
+
+---
+
+⭐ **Star this repo** if you find it useful!
