@@ -73,7 +73,7 @@ Populate it with the appropriate details and link it from the relevant task.
 **Architecture checklist** (from `docs/policies/AI_AGENTS.md`):
 
 - [ ] Which layer? (Presentation, Domain, Infrastructure)
-- [ ] Needs DI? (Only if critical path: trading, risk, state)
+- [ ] Needs DI? (Only if critical path: core logic, state, critical path)
 - [ ] Error handling? (Result type or exception?)
 - [ ] Tests? (90% if critical, 50% otherwise)
 - [ ] State? (Must use StateManager if touching state)
@@ -142,7 +142,7 @@ See "Integration Checklist" in `tasks/GUIDELINES.md` for:
 - [ ] **Makefile:** New commands added (if new scripts created)
 - [ ] **README.md:** Quick Commands updated (if user-facing changes)
 - [ ] **CHANGELOG.md:** Entry added under current version
-- [ ] **HOW_IT_WORKS.md:** Updated (if core workflow changed: trading, bracket orders, safety, CI)
+- [ ] **HOW_IT_WORKS.md:** Updated (if core workflow changed: core workflows, safety, CI)
 - [ ] **Related guides:** Strategy docs, how-tos updated (if applicable)
 
 #### Institutional Memory (per .ai/enforcement_rules.md)

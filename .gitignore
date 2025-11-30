@@ -1,0 +1,72 @@
+# Secrets - NEVER COMMIT
+.env
+.env.local
+*.env
+config/secrets.yaml
+*api_key*
+*secret*
+*password*
+
+# Python Virtual Environment
+.venv/
+venv/
+env/
+ENV/
+
+# Python Artifacts
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+.python-version
+
+# Note: This template is Python-focused (v1.0)
+# For other languages, add language-specific ignores (node_modules/, target/, etc.)
+
+# Testing & Coverage
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.tox/
+.nox/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.cursor/
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Pre-commit
+.pre-commit-config.yaml.local
+

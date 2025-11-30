@@ -89,7 +89,7 @@
 4. ✅ Rename task: `N-in-progress-name.md`
 5. ✅ Update BACKLOG.md (mark in-progress)
 
-**Issue #002 lesson:** AI agent skipped pre-work to "save time" - this violated process and required user correction. Pre-work is NOT optional.
+**Important lesson:** AI agents have skipped pre-work to "save time" - this violates process and requires user correction. Pre-work is NOT optional.
 
 ---
 
@@ -108,7 +108,7 @@
 
 **AI agents:** Treat this as a BLOCKING requirement, not a suggestion. The task is NOT complete until all 6 items are verified.
 
-**How to verify:** Run `make validate-task` before marking task complete.
+**How to verify:** Manually check each item or use your project's validation tools before marking task complete.
 
 ---
 
@@ -156,12 +156,12 @@
 - 400-800 lines = 2-3 tool calls (moderate)
 - 1,500+ lines = 6+ tool calls (3-5x slower)
 
-**Real example:** `TRADING/morning_routine.py` (1,575 lines) required 6 tool calls just to understand structure, slowing down architecture review significantly.
+**Real example:** A large file (1,575 lines) required 6 tool calls just to understand structure, slowing down architecture review significantly. Refactoring to 8-10 modules @ 200-300 lines each reduced this to 1-2 tool calls per module.
 
 **Enforcement:**
 
 - Pre-commit hook warns on files >400 lines
-- Task 90: Refactor morning_routine.py (1,575 lines → 8-10 modules @ 200-300 lines each)
+- Large files should be refactored into smaller modules (200-300 lines each)
 
 **Exceptions:** Configuration files, auto-generated code (document why)
 
@@ -241,17 +241,49 @@ git push origin <branch>
 
 **Tools:**
 
-- `make fix` - Run ruff format + bandit before commit
+- `make fix` - Run auto-formatters and linters before commit (if available)
 - `make pre-commit` - Run all pre-commit hooks manually
-- `make safe-commit` - Commit with automatic hook verification (Task 93)
+- Check your project's Makefile for additional commit verification tools
 
 **Enforcement:** AI agents MUST check command status before pushing
 
-**See:** `docs/lessons_learned/precommit_hook_verification.md` for incident details
+**See:** Document pre-commit hook incidents in your project's lessons learned documentation
+
+---
+
+---
+
+## Rule 10: Code Review From Past Incidents
+
+**FORBIDDEN:**
+
+- ❌ Repeating patterns that caused past incidents (document in shadow_memory.md)
+- ❌ Bypassing safety checks that were added after previous failures
+- ❌ Direct file/database writes bypassing abstraction layers
+- ❌ Unmocked external API calls in tests
+- ❌ Using `git commit --no-verify` on code changes (only for docs-only commits)
+
+**REQUIRED:**
+
+Before submitting code, check for patterns from past incidents documented in shadow_memory.md:
+
+1. **Review shadow_memory.md** for project-specific patterns to avoid
+2. **Check for similar patterns** in your changes
+3. **Verify safety checks** are in place if they were added after past incidents
+4. **Ensure tests mock external dependencies** (APIs, databases, file systems)
+
+**How to maintain:**
+
+- When incidents occur, document the pattern in shadow_memory.md
+- Include: What happened, why it happened, how to avoid it
+- Reference the pattern in code review checklists
+- Update this rule if new critical patterns emerge
+
+**Why:** Learning from past mistakes prevents repeating them. Shadow memory captures institutional knowledge about what NOT to do.
 
 ---
 
 **Read this file:** When starting work, after completing work, or if uncertain about standards.  
 **Don't read frequently:** These are reference rules, not workflow steps (use GUIDELINES.md for workflow).
 
-**Last Updated:** 2025-11-26 (Added Rule 7: File Size Limits, Rule 8: Quick Context Maintenance, Rule 9: Git Commit Verification)
+**Last Updated:** 2025-11-30 (Added Rule 10: Code Review From Past Incidents)

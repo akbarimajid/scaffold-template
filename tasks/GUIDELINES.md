@@ -4,19 +4,40 @@ Quick reference for task workflows. **See `docs/CHECKLISTS.md` for comprehensive
 
 ---
 
+## Task Automation Commands (AI Agents)
+
+**Quick reference for task management automation:**
+
+| Command | Description |
+|---------|-------------|
+| `make task-start N={ID}` | Start task: rename pending → in-progress, update BACKLOG |
+| `make task-complete N={ID}` | Complete task: rename in-progress → completed, add completion template |
+| `make task-status N={ID}` | Show task status, file location, and blocker status |
+| `make check-task-blockers N={ID}` | Verify blocker tasks are completed (exit 0 if ready, 1 if blocked) |
+| `make update-shadow-memory task={N}` | Extract patterns/lessons from completion notes to shadow memory |
+| `make principal-review task={N}` | Automated principal review for P0/P1 tasks (auto-approve/review/block) |
+
+**Usage:**
+- Always use `make task-start N={N}` at the beginning, `make task-complete N={N}` at the end
+- Never manually rename task files
+- **After completing task:** Run `make update-shadow-memory task={N}` if completion notes contain patterns or lessons learned
+
+---
+
 ## Workflow
 
 1. Read task file FIRST (all details in task file)
-2. Rename to `{N}-in-progress-{name}.md`
-3. Update `BACKLOG.md`
-4. Create branch: `feature/task-{NUMBER}-{short-name}`
+2. **Automated:** Run `make task-start N={N}` (renames file, updates BACKLOG)
+3. Create branch: `feature/task-{NUMBER}-{short-name}`
+4. **Optional:** Run `make check-task-blockers N={N}` to verify dependencies
 5. Work in chunks (1 chunk = 1 logical unit, 2-5 items)
 6. **Chunk discipline:** Code → Commit → Push → Wait for confirmation
 7. Test locally when applicable
 8. Complete integration (see below)
-9. Rename to `{N}-completed-{name}.md`
-10. Update `BACKLOG.md`
-11. Create PR
+9. Fill in completion notes (what worked, patterns, lessons)
+10. **Automated:** Run `make task-complete N={N}` (renames file, updates BACKLOG, adds completion template)
+11. **Optional:** Run `make update-shadow-memory task={N}` to update shadow memory
+12. Create PR
 
 **Commit format:** `{type}: {description} (Task {NUMBER})`  
 **Types:** `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `integrate`
@@ -90,7 +111,57 @@ git push 2>&1 | tail -5
 2. If blocked, verify blocker completion
 3. If blocker not complete, choose different task
 
-**Future automation:** Pre-commit hook or `make check-task-blockers N={ID}`
+**Automation:** Use `make check-task-blockers N={ID}` to verify dependencies
+
+---
+
+## Principal Review (P0/P1 Tasks Only)
+
+**Purpose:** Token-efficient review process for critical changes. Provides 200-token guidance instead of reading entire codebase.
+
+**When to request review:** Architecture changes, core functionality modifications, breaking changes, or any change that could cause production issues.
+
+**5-Question Checklist (Answer Y/N):**
+
+1. **Architecture alignment?** Does this follow your project's architecture patterns? No layer violations?
+2. **Risk impact?** Could this cause production issues? (data loss, security, performance, breaking changes)
+3. **Testing coverage?** Critical path covered >= 90%? All new code paths tested?
+4. **Decisions documented?** Major architectural choices in DECISIONS.md? (see Rule 1 in enforcement_rules.md)
+5. **Integration complete?** Makefile, README, CHANGELOG, documentation updated if needed?
+
+**Auto-approve if ALL true:**
+- Documentation-only changes (no code)
+- Test additions (no production code changes)
+- Coverage >= 90% for any code changes
+- No architecture or core functionality modifications
+- No breaking changes
+
+**Review required if ANY true:**
+- Core architecture changes (e.g., major refactoring, new patterns)
+- Core functionality modifications (e.g., critical business logic changes)
+- Breaking API changes (public interfaces, data formats)
+- Security-sensitive changes (authentication, authorization, data handling)
+- Performance-critical changes (database queries, algorithms, caching)
+
+**Block if ANY true:**
+- Missing tests on critical path (< 90% coverage for core code)
+- No DECISIONS.md entry for major architectural decision (violates Rule 1)
+- Production risk without safety validation (untested critical paths)
+- Layer violations (e.g., circular dependencies, wrong abstraction levels)
+- Pre-commit hooks failing (Rule 2 violation)
+
+**Automated Review:** Run `make principal-review task={N}` to automatically:
+- Analyze changed files (git diff vs main)
+- Categorize changes (architecture/core/security/docs)
+- Apply criteria and output decision (Auto-approve/Review required/Block)
+- Display 5-question checklist if review required
+
+**Manual Review (if automation unavailable):**
+1. Read task file and `git diff` for changed files
+2. Answer 5 questions (Y/N) from checklist above
+3. Check approval/review/block criteria
+4. If review required: Provide 1-sentence reasoning + 1-2 specific suggestions (<200 tokens)
+5. If block: List specific blocking items (missing tests, layer violations, etc.)
 
 ---
 
@@ -101,7 +172,7 @@ git push 2>&1 | tail -5
 - [ ] **README.md:** User-facing changes? → Update relevant section
 - [ ] **CHANGELOG.md:** Notable changes? → Add entry
 - [ ] **GitHub Workflows:** New validation/env var? → Update workflows
-- [ ] **Daily Scripts:** Affects workflow? → Update `TRADING/daily_routine.sh`
+- [ ] **Daily Scripts:** Affects workflow? → Update relevant automation scripts
 - [ ] **Documentation:** HOW_IT_WORKS.md, CLAUDE.md, FRAMEWORK.md if applicable
 - [ ] **Institutional Memory:** DECISIONS.md, LESSONS_LEARNED.md, shadow_memory.md
 
