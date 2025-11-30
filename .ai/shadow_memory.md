@@ -85,3 +85,4 @@
 ---
 
 **Remember:** The automation (`make update-shadow-memory`) handles most updates. You only need to manually add major decisions or critical patterns that aren't captured in completion notes.
+- **Task 01:** **Layered architecture:** Database → Service → API → Middleware separation made code testable. **Always hash passwords:** Never store plaintext passwords, even in development.

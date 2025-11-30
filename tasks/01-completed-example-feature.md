@@ -94,23 +94,20 @@ Implement a basic authentication system with user registration and login. This e
 - **Password hashing:** Using bcrypt library prevented security issues
 - **Session tokens:** UUID-based tokens with expiration provided good security
 
-### Patterns Identified
+- **Patterns identified:**
+  - **Layered architecture:** Database → Service → API → Middleware separation made code testable
+  - **Security-first:** Hashing passwords and expiring sessions prevents common vulnerabilities
+  - **Error handling:** Consistent error responses improve API usability
 
-- **Layered architecture:** Database → Service → API → Middleware separation made code testable
-- **Security-first:** Hashing passwords and expiring sessions prevents common vulnerabilities
-- **Error handling:** Consistent error responses improve API usability
+- **Lessons learned:**
+  - **Always hash passwords:** Never store plaintext passwords, even in development
+  - **Test authentication flows:** Integration tests catch issues that unit tests miss
+  - **Session expiration:** Short expiration times (24 hours) balance security and UX
 
-### Lessons Learned
-
-- **Always hash passwords:** Never store plaintext passwords, even in development
-- **Test authentication flows:** Integration tests catch issues that unit tests miss
-- **Session expiration:** Short expiration times (24 hours) balance security and UX
-
-### What Would Be Done Differently
-
-- **Add rate limiting:** Should have added rate limiting to prevent brute force attacks
-- **Email verification:** Should have included email verification step in registration
-- **Refresh tokens:** Should have implemented refresh token pattern for better UX
+- **Would do differently:**
+  - **Add rate limiting:** Should have added rate limiting to prevent brute force attacks
+  - **Email verification:** Should have included email verification step in registration
+  - **Refresh tokens:** Should have implemented refresh token pattern for better UX
 
 ---
 
