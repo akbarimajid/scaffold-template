@@ -1,0 +1,231 @@
+# Pre-commit hooks configuration
+# See https://pre-commit.com for more information
+
+repos:
+  # Black - Python code formatter
+  - repo: https://github.com/psf/black
+    rev: 25.11.0
+    hooks:
+      - id: black
+        language_version: python3.12
+
+  # Flake8 - Python linter
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.3.0
+    hooks:
+      - id: flake8
+        args: [--max-line-length=100]
+
+  # Pre-commit hooks for general file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      # YAML validation
+      - id: check-yaml
+        args: [--unsafe]  # Allow custom YAML tags
+
+      # JSON validation
+      - id: check-json
+
+      # Prevent large files (>1MB)
+      - id: check-added-large-files
+        args: [--maxkb=1000]
+
+      # Detect accidentally committed private keys
+      - id: detect-private-key
+
+      # Remove trailing whitespace
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+
+      # Ensure files end with newline
+      - id: end-of-file-fixer
+
+      # Check for merge conflicts
+      - id: check-merge-conflict
+
+      # Check executables have shebangs
+      - id: check-executables-have-shebangs
+
+      # Fix mixed line endings
+      - id: mixed-line-ending
+        args: [--fix=lf]
+        # Exclude data files that shouldn't be modified
+        exclude: ^data/strategy_validation/
+
+  # File size warning (non-blocking)
+  - repo: local
+    hooks:
+      - id: file-size-warning
+        name: Warn on large files
+        entry: scripts/pre-commit-hooks/check_file_sizes.sh
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+
+  # Local hooks - Testing and Security
+  - repo: local
+    hooks:
+      # All integration tests - run automatically on commit (agentic mode)
+      # Runs all 84 integration tests to catch bugs before commit
+      - id: integration-tests
+        name: Run all integration tests (~8s)
+        entry: bash
+        language: system
+        pass_filenames: false
+        verbose: false
+        require_serial: false
+        args:
+          - -c
+          - |
+            export PYTHONDONTWRITEBYTECODE=1
+            # Use environment variable to force pytest cache to temp directory (prevents file creation in repo)
+            export PYTEST_CACHE_DIR=$(mktemp -d)
+            # Clean up any existing pytest cache and coverage files BEFORE running
+            rm -rf .pytest_cache __pycache__ tests/__pycache__ tests/integration/__pycache__ .coverage htmlcov .coverage.* 2>/dev/null || true
+            # Run tests with coverage disabled and cache disabled
+            # --override-ini="addopts=" removes coverage settings from pytest.ini
+            # -p no:cacheprovider disables cache plugin (prevents .pytest_cache creation)
+            OUTPUT=$(uv run pytest tests/integration/ -v --tb=short --no-cov --override-ini="addopts=" -p no:cacheprovider 2>&1)
+            EXIT=$?
+            # Clean up temp cache directory immediately after tests
+            rm -rf "$PYTEST_CACHE_DIR" 2>/dev/null || true
+            unset PYTEST_CACHE_DIR
+            # Defensive cleanup of any files that might have been created
+            rm -rf .pytest_cache __pycache__ tests/__pycache__ tests/integration/__pycache__ .coverage htmlcov .coverage.* 2>/dev/null || true
+            # Only show output if tests failed
+            if [ $EXIT -ne 0 ]; then
+              echo "❌ Integration tests failed:"
+              echo ""
+              echo "$OUTPUT"
+              exit 1
+            fi
+        # Runs automatically - catches ALL integration bugs (not just smoke tests)
+        # Silent when passing, verbose when failing (shows which tests failed)
+        # Uses temporary directory for pytest cache to prevent file creation in repo
+        # For agentic mode: AI agents get immediate feedback on all tests
+        # Time: ~8-9 seconds (acceptable for automated commits)
+
+      # Full test suite (manual - 112 tests ~2s)
+      - id: pytest-all
+        name: Run all tests (unit + integration)
+        entry: bash -c 'uv run pytest tests/ -v --tb=short'
+        language: system
+        pass_filenames: false
+        stages: [manual]  # Run manually with: pre-commit run pytest-all --hook-stage manual
+        verbose: true
+        # Coverage: 15.48%, threshold: 12%
+
+      # Smoke tests (manual - for quick validation)
+      - id: smoke-tests
+        name: Run smoke tests only (<2s)
+        entry: bash -c 'export PYTHONDONTWRITEBYTECODE=1; uv run pytest tests/integration/ -v -m smoke --tb=short --no-cov -p no:cacheprovider'
+        language: system
+        pass_filenames: false
+        stages: [manual]  # Run manually with: pre-commit run smoke-tests --hook-stage manual
+        verbose: true
+        # 16 tests, fast validation for quick iterations
+
+      # Security check - hardcoded secrets
+      - id: check-secrets
+        name: Check for hardcoded secrets
+        entry: bash
+        language: system
+        pass_filenames: false
+        verbose: true
+        args:
+          - -c
+          - |
+            echo "🔍 Scanning for hardcoded secrets..."
+            if grep -rE '(APCA_API_KEY_ID|APCA_API_SECRET_KEY)\s*=\s*["'\''](PK|SK)[A-Z0-9]{20,}["'\'']' . \
+               --exclude-dir=.git \
+               --exclude-dir=.venv \
+               --exclude-dir=node_modules \
+               --exclude-dir=.github/workflows-disabled \
+               --exclude=".env" \
+               --exclude=".env.*" \
+               --exclude="*.md"; then
+              echo "❌ Hardcoded API key found!"
+              exit 1
+            fi
+            if git ls-files | grep -q "\.env$"; then
+              echo "⚠️  WARNING: .env file is tracked by git"
+              exit 1
+            fi
+            echo "✅ No hardcoded secrets detected"
+
+      # Framework compliance (manual check)
+      - id: framework-compliance
+        name: Check FRAMEWORK.md compliance
+        entry: python scripts/maintenance/check_framework_compliance.py
+        language: python
+        pass_filenames: false
+        stages: [manual]  # Run manually with: pre-commit run framework-compliance --hook-stage manual
+
+      # Checklist validation (automatic)
+      - id: validate-checklists
+        name: Validate documentation checklist items
+        entry: uv run python scripts/maintenance/validate_checklists.py
+        language: system
+        pass_filenames: false
+        verbose: true
+        # Validates: README version, CHANGELOG entry, Makefile commands, HOW_IT_WORKS updates
+
+      # AI workflow validation (automatic)
+      - id: check-ai-workflow
+        name: Validate AI workflow compliance
+        entry: bash .pre-commit-hooks/check-ai-workflow.sh
+        language: system
+        pass_filenames: false
+        verbose: true
+        # Validates: branch naming, task file status, BACKLOG consistency
+
+
+      # Critical module coverage enforcement (80%+ required)
+      - id: check-critical-coverage
+        name: Enforce 80% coverage for 4 critical modules
+        entry: bash .pre-commit-hooks/check-critical-coverage.sh
+        language: system
+        pass_filenames: false
+        verbose: true
+        # Blocks commits to critical modules if coverage < 80%
+        # Critical modules: gap-fill strategy, circuit breakers, position manager, config loader
+
+      # Architecture layer violation checks (warn mode initially)
+      - id: architecture-tests
+        name: Check architecture layer violations
+        entry: bash
+        language: system
+        pass_filenames: false
+        verbose: false
+        args:
+          - -c
+          - |
+            export PYTHONDONTWRITEBYTECODE=1
+            # Run architecture tests silently, only show failures
+            OUTPUT=$(uv run pytest tests/architecture/ -q --tb=line --no-cov 2>&1)
+            EXIT=$?
+            # Only show output if tests failed
+            if [ $EXIT -ne 0 ]; then
+              echo "⚠️  Architecture layer violations detected:"
+              echo ""
+              echo "$OUTPUT"
+              echo ""
+              echo "Note: This is a warning (warn mode). Known violations will be fixed in Task 66."
+              # Don't exit with error - warn mode allows commit
+            fi
+        # Warn mode: Shows violations but doesn't block commits
+        # Silent when passing (no output)
+        # Fast: Runs in <2 seconds
+        # Known violations documented in test output (will be fixed in Task 66)
+
+      # Block real API calls in tests (CRITICAL for real money safety)
+      - id: check-test-api-usage
+        name: Check tests don't use real broker APIs
+        entry: uv run python scripts/maintenance/check_test_api_usage.py
+        language: system
+        pass_filenames: false
+        verbose: true
+        # CRITICAL: Blocks commits if tests use real APIs
+        # Prevents accidental real money trading during test execution
+        # Scans for unmocked TradingClient, StockHistoricalDataClient, AlpacaAdapter
