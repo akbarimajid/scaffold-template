@@ -23,9 +23,9 @@ scripts/ (Presentation) → core/domain/ (Business Logic) → core/adapters/ (Ex
 
 | Module | Coverage | Enforcement |
 |--------|----------|-------------|
-| `core/domain/trading.py` | 90%+ | Pre-commit |
+| `core/domain/logic.py` | 90%+ | Pre-commit |
 | `core/domain/risk.py` | 90%+ | Pre-commit |
-| `core/adapters/alpaca.py` | 90%+ | Pre-commit |
+| `core.adapters.external_api.py` | 90%+ | Pre-commit |
 | `core/state/manager.py` | 90%+ | Pre-commit |
 | Other modules | 50%+ | CI |
 
@@ -48,7 +48,7 @@ make check-architecture      # Validate architecture
 
 2. **Architecture decisions:**
    - [ ] Which layer? (Presentation, Domain, Infrastructure)
-   - [ ] Needs DI? (Only if critical path: trading, risk, state)
+   - [ ] Needs DI? (Only if critical path: core logic, state)
    - [ ] Error handling? (Result type or exception?)
    - [ ] Tests? (90% if critical, 50% otherwise)
    - [ ] State? (Must use StateManager)
@@ -123,11 +123,11 @@ Pre-commit hooks validate workflow compliance automatically. Follow task workflo
 ### ❌ Script Importing Adapter
 ```python
 # WRONG
-from core.adapters.alpaca import AlpacaTradingAdapter
-adapter = AlpacaTradingAdapter()
+from core.adapters.external_api import ExternalServiceAdapter
+adapter = ExternalServiceAdapter()
 
 # CORRECT
-from core.domain.trading import create_trade_executor
+from core.domain.logic import create_executor
 executor = create_trade_executor()  # Factory handles DI
 ```
 
