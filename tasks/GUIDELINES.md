@@ -96,6 +96,82 @@ git push 2>&1 | tail -5
 
 ---
 
+## Test-Driven Development (TDD)
+
+**Mandatory Workflow for Bug Fixes and New Features:**
+
+### TDD Workflow: RED → GREEN → REFACTOR
+
+1. **RED Phase (Write Tests First)**
+   - Write tests that define expected behavior
+   - Tests will fail (this is expected - bugs exist or feature doesn't exist)
+   - Tests document the bug/requirement clearly
+   - Create a separate task for writing tests if needed
+
+2. **GREEN Phase (Make Tests Pass)**
+   - Implement code to make tests pass
+   - Focus on making tests green, not perfect code
+   - Verify all tests pass
+
+3. **REFACTOR Phase (Improve Code)**
+   - Improve code quality while keeping tests green
+   - Add edge case tests if needed
+   - Ensure no regressions
+
+### Task Dependency Pattern
+
+**For bug fixes or feature work:**
+- **Task A (P1):** Write tests FIRST (RED phase) - Tests fail as expected
+- **Task B (P0/P1):** Implement fix/feature (GREEN phase) - Makes tests pass
+- Clear dependency: Task B depends on Task A
+
+**Benefits:**
+- Tests define expected behavior before implementation
+- Tests document bugs/requirements clearly
+- Tests prevent regressions
+- Clear execution order prevents working on wrong things first
+
+### Test Quality Principles
+
+**Write tests to catch bugs, not just pass:**
+- ✅ Test edge cases (zero, negative, extreme values)
+- ✅ Test error conditions (missing data, invalid input)
+- ✅ Test side effects (state changes, file writes)
+- ✅ Test boundary conditions
+- ❌ Don't accept buggy behavior in tests
+- ❌ Don't only check return values (verify side effects)
+
+### Test Coverage Requirements
+
+- **Critical path** (core logic, state, safety): >= 90% coverage
+- **Other code:** >= 50% coverage
+- **Integration tests:** Required for workflows
+- **Unit tests:** Required for individual functions
+
+### Atomic File Operations
+
+**When writing files (JSON, config, data):**
+- Use atomic writes: Write to temp file → validate → rename
+- Prevents incomplete files from interrupted writes (Ctrl+C, exceptions, process kills)
+- Add cleanup method to remove incomplete files on startup
+
+**Example Pattern:**
+```python
+# Write to temp file first
+temp_filepath = filepath + ".tmp"
+with open(temp_filepath, "w") as f:
+    json.dump(data, f)
+
+# Validate before finalizing
+with open(temp_filepath, "r") as f:
+    json.load(f)  # Validate
+
+# Atomic rename
+os.rename(temp_filepath, filepath)
+```
+
+---
+
 ## Task Blocking Dependencies
 
 **If task status is `blocked`:**

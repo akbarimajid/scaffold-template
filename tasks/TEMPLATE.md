@@ -56,10 +56,40 @@ Populate it with the appropriate details and link it from the relevant task.
 
 ## Implementation
 
+> [!IMPORTANT]
+> **TEST-DRIVEN DEVELOPMENT (TDD) REQUIREMENT:**
+> 
+> **Before implementing ANY code changes:**
+> 1. Write tests first that cover the scenarios/issues being fixed
+> 2. Tests should fail initially (red phase)
+> 3. Implement code to make tests pass (green phase)
+> 4. Refactor if needed (refactor phase)
+> 
+> **For bug fixes:**
+> - Write a test that reproduces the bug (test fails)
+> - Fix the bug (test passes)
+> - Add edge case tests
+> 
+> **For new features:**
+> - Write tests for expected behavior first
+> - Implement feature to satisfy tests
+> - Add integration tests
+> 
+> **Test Coverage Requirements:**
+> - Critical path (core logic, state, safety): >= 90% coverage
+> - Other code: >= 50% coverage
+> - Integration tests for workflows
+> - Unit tests for individual functions
+
 ### Chunk 1: {Name}
 
-- [ ] Step 1
-- [ ] Step 2
+- [ ] **Write tests first** (TDD approach)
+  - [ ] Identify test scenarios
+  - [ ] Write failing tests
+  - [ ] Document expected behavior
+- [ ] Step 1 (implementation)
+- [ ] Step 2 (implementation)
+- [ ] Verify tests pass
 - [ ] Push + wait
 
 ### Chunk 2: {Name}
