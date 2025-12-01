@@ -84,7 +84,7 @@ if [ "$DOCS_ONLY" -eq 1 ]; then
   if [ "$NON_MD_COUNT" -eq 0 ]; then
     echo "✅ Auto-approve: Documentation-only changes"
     echo ""
-    echo "Reasoning: All changed files are markdown (docs). No code changes to trading logic."
+    echo "Reasoning: All changed files are markdown (docs). No code changes to core logic."
     exit 0
   fi
 fi

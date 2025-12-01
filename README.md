@@ -37,6 +37,26 @@ AI coding tools lose context after 1 session. This system preserves 100% context
 
 Built a production system in 58 tasks with zero knowledge loss using this exact framework.
 
+## Disclaimer
+
+**This is a template/example repository provided for educational and reference purposes.**
+
+- ⚠️ **Use at your own risk** - This template is provided "as-is" without any warranties
+- ⚠️ **Not production-ready** - You must review, test, and adapt all code to your specific needs
+- ⚠️ **No guarantees** - The authors make no guarantees about suitability for any purpose
+- ⚠️ **Your responsibility** - You are responsible for ensuring compliance with your local laws, regulations, and security requirements
+- ⚠️ **No liability** - The authors and contributors are not liable for any damages or losses resulting from use of this template
+
+**Before using in production:**
+- Review all code thoroughly
+- Test extensively in your environment
+- Adapt to your specific requirements
+- Ensure compliance with applicable laws and regulations
+- Implement appropriate security measures
+- Set up proper monitoring and error handling
+
+See [LICENSE](LICENSE) for full legal terms.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
