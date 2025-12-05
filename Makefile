@@ -1,7 +1,8 @@
-.PHONY: help task-start task-complete task-status check-task-blockers update-shadow-memory principal-review pre-commit
+.PHONY: help task-start task-complete task-status check-task-blockers update-shadow-memory principal-review task-update-checklist pre-commit
 help:
 	@echo "Available commands:"
 	@echo "  make task-start N={ID}        - Start a task (renames file, updates backlog)"
+	@echo "  make task-update-checklist N={ID} - Mark all checkboxes as complete (before task completion)"
 	@echo "  make task-complete N={ID}     - Complete a task (renames file, updates backlog)"
 	@echo "  make task-status N={ID}      - Show task status, file location, and blocker status"
 	@echo "  make check-task-blockers N={ID} - Check if task dependencies are met"
@@ -21,6 +22,18 @@ task-start: ## Start a task (renames file, updates backlog)
 		exit 1; \
 	fi
 	@bash scripts/task_automation/start_task.sh $(N)
+
+.PHONY: task-update-checklist
+task-update-checklist: ## Mark all checkboxes as complete (make task-update-checklist N={ID} [DRY=1])
+	@if [ -z "$(N)" ]; then \
+		echo "❌ Usage: make task-update-checklist N={N} [DRY=1]"; \
+		echo ""; \
+		echo "Automates marking [ ] to [x] in task files."; \
+		echo "Creates a backup before modification."; \
+		echo "Use DRY=1 for a dry run (no changes)."; \
+		exit 1; \
+	fi
+	@python3 scripts/validation/update_task_checklist.py $(N) $(if $(DRY),--dry-run)
 
 .PHONY: task-complete
 task-complete: ## Complete a task (renames file, updates backlog)

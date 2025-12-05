@@ -55,15 +55,15 @@ for FILE in $FILES; do
     HAS_STRATEGY=1
   fi
 
-  # Risk management (position sizing, stops, circuit breakers)
-  if [[ "$FILE" == *position* ]] || [[ "$FILE" == *stop* ]] || [[ "$FILE" == *circuit* ]] || \
-     [[ "$FILE" == *risk* ]] || [[ "$FILE" == *filter* ]]; then
+  # Risk management (safety, validation, error handling)
+  if [[ "$FILE" == *risk* ]] || [[ "$FILE" == *safety* ]] || [[ "$FILE" == *validation* ]] || \
+     [[ "$FILE" == *error* ]] || [[ "$FILE" == *filter* ]]; then
     HAS_RISK=1
   fi
 
-  # State management (StateManager, TradeJournal)
+  # State management (state, journal, database, persistence)
   if [[ "$FILE" == *state* ]] || [[ "$FILE" == *journal* ]] || [[ "$FILE" == *database* ]] || \
-     [[ "$FILE" == *sqlite* ]] || [[ "$FILE" == *db* ]]; then
+     [[ "$FILE" == *sqlite* ]] || [[ "$FILE" == *db* ]] || [[ "$FILE" == *persist* ]]; then
     HAS_STATE=1
   fi
 
@@ -113,12 +113,12 @@ fi
 
 if [ "$HAS_RISK" -eq 1 ]; then
   REVIEW_REQUIRED=1
-  REVIEW_REASONS+=("Risk management changes (position sizing, stops, filters)")
+  REVIEW_REASONS+=("Risk management changes (safety, validation, error handling)")
 fi
 
 if [ "$HAS_STATE" -eq 1 ]; then
   REVIEW_REQUIRED=1
-  REVIEW_REASONS+=("State management changes (StateManager, TradeJournal, database)")
+  REVIEW_REASONS+=("State management changes (state, journal, database, persistence)")
 fi
 
 if [ "$HAS_BREAKING_API" -eq 1 ]; then
@@ -166,7 +166,7 @@ if [ "$REVIEW_REQUIRED" -eq 1 ]; then
   echo ""
   echo "5-Question Checklist (answer Y/N):"
   echo "  1. Architecture alignment? (3-layer design, no violations)"
-  echo "  2. Risk impact? (Could cause real money loss?)"
+  echo "  2. Risk impact? (Could cause data loss, security issues, or production failures?)"
   echo "  3. Testing coverage? (Critical path >= 90%?)"
   echo "  4. Decisions documented? (DECISIONS.md updated?)"
   echo "  5. Integration complete? (Makefile, README, CHANGELOG updated?)"

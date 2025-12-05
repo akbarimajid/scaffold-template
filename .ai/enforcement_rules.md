@@ -1,288 +1,196 @@
 # Enforcement Rules for AI Agents
 
-**Purpose:** Critical rules that NO AI agent may bypass under any circumstances.
+**Purpose:** Critical rules enforced by automation - NO AI agent may bypass
 
-**Last Updated:** 2025-11-22
+**Last Updated:** 2025-12-05
+
+> [!CAUTION]
+> **AI Agents:** Read this file when starting work and before completing tasks. Rules are enforced by automation - cannot be skipped.
 
 ---
 
-## Rule 1: Never Compromise Institutional Memory
+## Rule 1: Pre-Work Automation (ENFORCED)
 
-**FORBIDDEN:**
+**Automated by:** `make task-start N={N}`
 
-- ❌ Creating "short task summaries" or incomplete task files
-- ❌ Skipping DECISIONS.md updates for major architectural choices
-- ❌ Skipping LESSONS_LEARNED.md updates after task completion  
-- ❌ Not updating shadow_memory.md when new patterns emerge
+**What it does:**
+- Pulls latest from main
+- Creates/checks out branch
+- Renames task file (pending → in-progress)
+- Updates status field automatically
+- Updates BACKLOG.md
 
-**REQUIRED:**
+**AI Agent:** Run `make task-start N={N}` before ANY code changes. Cannot skip (automation prevents it).
 
-- ✅ ALL task files MUST follow TEMPLATE.md completely
-- ✅ ALL major decisions MUST be documented in `docs/DECISIONS.md`
-- ✅ ALL completed tasks MUST update `docs/LESSONS_LEARNED.md`
-- ✅ ALL new patterns MUST update `.ai/shadow_memory.md`
+**Why:** AI agents skip pre-work to "save time". Automation prevents skipping.
+
+**Verification:** `make verify-prework N={N}` (pre-flight check)
+
+---
+
+## Rule 2: Pre-Commit Hooks (ENFORCED)
+
+**Automated by:** Pre-commit hooks (`.pre-commit-hooks/check-ai-workflow.sh`)
+
+**What it checks:**
+- Task file status matches branch
+- BACKLOG.md consistency
+- Documentation bloat (AI_AGENTS.md <220 lines)
+- File size limits (>800 lines = BLOCKING)
+- Docs-only commit detection
+
+**AI Agent:** Hooks run automatically. If they fail, fix issues - don't bypass.
+
+**Exception:** Docs-only commits (markdown files only) can use `--no-verify`
+
+**Why:** Pre-commit hooks catch bugs, enforce architecture, verify tests. Bypassing defeats safety system.
+
+**Verification:** `make pre-commit` (run before commit)
+
+---
+
+## Rule 3: Code Review Patterns (AUTOMATED)
+
+**Automated by:** `make check-code-patterns [FILES]`
+
+**What it checks:**
+- Patterns from past incidents (documented in shadow_memory.md)
+- Direct file/database writes bypassing abstraction layers
+- Unmocked API calls in tests
+- Missing safety checks
+
+**AI Agent:** Run before committing code changes.
+
+**Why:** These patterns caused real bugs or architecture violations. Checking prevents regression.
+
+**Verification:** `make check-code-patterns` (checks staged files)
+
+---
+
+## Rule 4: Institutional Memory (AUTOMATED)
+
+**Automated by:** `make check-institutional-memory N={N}` (runs automatically in `make task-complete`)
+
+**What it checks:**
+- Task file has completion notes
+- DECISIONS.md updated (if architectural changes)
+- LESSONS_LEARNED.md updated (if task completed)
+- shadow_memory.md updated (if new patterns)
+
+**AI Agent:** Runs automatically when completing task. Fix warnings before marking complete.
 
 **Why:** Each shortcut = knowledge loss. Shadow AI system ONLY works if every task builds institutional memory.
 
----
-
-## Rule 2: Never Bypass Pre-Commit Checks
-
-**FORBIDDEN:**
-
-- ❌ Using `git commit --no-verify` to skip pre-commit hooks (except docs-only)
-- ❌ Ignoring linting/formatting failures
-- ❌ Committing code with known test failures
-
-**REQUIRED:**
-
-- ✅ ALWAYS run `make pre-commit` before committing
-- ✅ FIX all linting/formatting issues before commit
-- ✅ ENSURE tests pass before commit
-- ✅ Commit with meaningful messages: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`  
-- ✅ Reference task: `(Task {N} - Chunk {M})`
-
-**Exception:** Docs-only commits can use `--no-verify` IF stated in commit message
-**Exception:** WIP commits allowed on feature branches (squash before PR)
+**Verification:** `make check-institutional-memory N={N}`
 
 ---
 
-## Rule 3: Never Take Shortcuts on Task Detail
+## Rule 5: Documentation Updates (AUTOMATED)
 
-**FORBIDDEN:**
+**Automated by:** `make check-docs-updates [FILES]`
 
-- ❌ "I'll create short summaries to ship faster"
-- ❌ Incomplete implementation chunks
-- ❌ Missing testing strategy
-- ❌ No acceptance criteria
+**What it checks:**
+- CHANGELOG.md updated (if user-facing changes)
+- README.md updated (if new commands/features)
 
-**REQUIRED:**
+**AI Agent:** Run before committing user-facing changes.
 
-- ✅ Implementation MUST have detailed chunks with specific steps
-- ✅ Testing MUST include commands and expected outcomes
-- ✅ Acceptance criteria MUST be specific and measurable
-- ✅ Follow TEMPLATE.md structure completely
+**Why:** Principal-level AI updates docs WITHOUT being asked.
 
-**Remember:** Incomplete tasks = next AI can't execute them
+**Verification:** `make check-docs-updates` (checks staged files)
 
 ---
 
-## Rule 4: Never Skip CHANGELOG/README Updates
+## Rule 6: File Size Limits (AUTOMATED)
 
-**REQUIRED:**
+**Automated by:** Pre-commit hook + `make check-file-sizes [FILES]`
 
-- ✅ PROACTIVELY update CHANGELOG.md after major changes (don't wait)
-- ✅ PROACTIVELY update README.md for user-facing changes
-- ✅ Update as you go, not at the end
+**What it checks:**
+- Files >800 lines = BLOCKING (must refactor)
+- Files >400 lines = WARNING (consider refactoring)
 
-**Why:** Principal-level AI updates docs WITHOUT being asked
-
----
-
-## Rule 5: Shadow AI Principles Checklist
-
-**PRE-WORK (DO FIRST, BEFORE ANY CODE):**
-
-1. ✅ Pull latest: `git checkout main && git pull`
-2. ✅ Create branch: `git checkout -b feature/task-N-name`
-3. ✅ Read GUIDELINES.md (understand chunk workflow)
-4. ✅ Rename task: `N-in-progress-name.md`
-5. ✅ Update BACKLOG.md (mark in-progress)
-
-**Important lesson:** AI agents have skipped pre-work to "save time" - this violates process and requires user correction. Pre-work is NOT optional.
-
----
-
-**TRIGGER:** Before marking ANY task as complete OR creating PR
-
-**MANDATORY:** Before completing ANY task, STOP and verify:
-
-1. ✅ Task file: All chunks complete + final integration chunk checked?
-2. ✅ DECISIONS.md: Major choices documented?
-3. ✅ LESSONS_LEARNED.md: Learnings from this task added?
-4. ✅ shadow_memory.md: New patterns identified?
-5. ✅ CHANGELOG/README: Updated if user-facing changes?
-6. ✅ Pre-commit checks: All passed?
-
-**If ANY answer is NO → STOP. Complete it NOW. Don't wait for user reminder.**
-
-**AI agents:** Treat this as a BLOCKING requirement, not a suggestion. The task is NOT complete until all 6 items are verified.
-
-**How to verify:** Manually check each item or use your project's validation tools before marking task complete.
-
----
-
-## Rule 6: Git Workflow is MANDATORY
-
-**FORBIDDEN:**
-
-- ❌ Working directly on main branch
-- ❌ No feature branch created
-- ❌ Implementing entire task without commits per chunk
-- ❌ Not pushing after each chunk
-
-**REQUIRED:**
-
-- ✅ ALWAYS create feature branch BEFORE any code changes
-- ✅ Branch naming: `feature/task-{N}-{short-description}`
-- ✅ Commit after EACH chunk (not at the end)
-- ✅ Push after each commit
-- ✅ WAIT for user confirmation between chunks
-
-**Why:** Parallel tasks, safety, reviewability, no lost work
-
-**Enforcement:** Task files now have MANDATORY pre-work checklist
-
----
-
-## Rule 7: File Size Limits for AI Agent Productivity
-
-**FORBIDDEN:**
-
-- ❌ Creating files >800 lines (BLOCKING for architecture work)
-- ❌ Ignoring file size warnings from pre-commit hooks  
-- ❌ Adding code to already-large files (>400 lines) without refactoring
-
-**REQUIRED:**
-
-- ✅ Files SHOULD be <400 lines (AI-friendly, 1 tool call to understand)
-- ✅ Files >400 lines = consider refactoring (AI agents need 2-3 tool calls)
-- ✅ Files >800 lines = MUST refactor before architecture work (AI agents need 6+ tool calls, 3-5x slower)
-- ✅ Classes with >10 methods = refactoring candidate
-
-**Why:** AI agents have tool call limits. Large files require multiple calls to understand:
-
-- <400 lines = 1 tool call to understand (fast)
+**Why:** AI agents have tool call limits. Large files require multiple calls:
+- <400 lines = 1 tool call (fast)
 - 400-800 lines = 2-3 tool calls (moderate)
-- 1,500+ lines = 6+ tool calls (3-5x slower)
+- >800 lines = 6+ tool calls (3-5x slower)
 
-**Real example:** A large file (1,575 lines) required 6 tool calls just to understand structure, slowing down architecture review significantly. Refactoring to 8-10 modules @ 200-300 lines each reduced this to 1-2 tool calls per module.
+**AI Agent:** Pre-commit hook warns automatically. Check before architecture work.
 
-**Enforcement:**
-
-- Pre-commit hook warns on files >400 lines
-- Large files should be refactored into smaller modules (200-300 lines each)
-
-**Exceptions:** Configuration files, auto-generated code (document why)
+**Verification:** `make check-file-sizes` (checks staged Python files)
 
 ---
 
-## Rule 8: Quick Context Files Must Stay Current
+## Rule 7: Git Workflow (ENFORCED)
 
-**FORBIDDEN:**
+**Automated by:** Pre-commit hooks
 
-- ❌ Completing tasks without updating relevant quick_context files
-- ❌ Adding new architecture patterns without documenting in patterns/
-- ❌ Major state changes without updating current_state.md
+**What it enforces:**
+- Feature branch required (cannot commit to main)
+- Task file must be in-progress (not pending)
+- Branch name must match task pattern
 
-**REQUIRED:**
+**AI Agent:** Hooks enforce automatically. Cannot bypass.
 
-- ✅ After architecture tasks (65-67): Update `.ai/quick_context/architecture_basics.md`
-- ✅ After testing changes: Update `.ai/quick_context/testing_strategy.md`
-- ✅ After incidents/gotchas: Add to `.ai/quick_context/common_gotchas.md`
-- ✅ Weekly or after milestones: Update `.ai/quick_context/current_state.md`
-
-**Why:** Quick context files enable 76-95% token reduction. Stale files = misleads AI agents.
-
-**Maintenance triggers:**
-
-- Architecture tasks complete → Update architecture_basics.md
-- New incident documented → Add to common_gotchas.md
-- Weekly review → Update current_state.md
-- Major milestone → Update all 4 files
-
-**Enforcement:** Task completion checklist includes "Update relevant quick_context files"
-
-**See:** `.ai/quick_context/README.md` for file descriptions and update frequency
+**Why:** Parallel tasks, safety, reviewability, no lost work.
 
 ---
 
-## Rule 9: Always Verify Pre-commit Hooks Pass
-
-**FORBIDDEN:**
-
-- ❌ Running `git push` without checking commit exit status
-- ❌ Ignoring pre-commit hook failures (exit code 1)
-- ❌ Bypassing hooks with `--no-verify` (except docs-only commits)
+## Rule 8: Task Detail Quality (MANUAL)
 
 **REQUIRED:**
+- Detailed implementation chunks
+- Testing strategy with commands
+- Specific acceptance criteria
+- Follow TEMPLATE.md structure
 
-- ✅ Run `make pre-commit` before committing (or your project's equivalent)
-- ✅ Check commit command exit status before pushing
-- ✅ If hooks fail (exit 1), re-stage auto-fixed files and amend commit
-- ✅ Read hook output for warnings
+**Why:** Quality requires human/AI judgment, not automation.
 
-**Why:** Pre-commit hooks auto-fix files but don't stage them. Pushing without verification = incomplete commits or broken code.
+**Remember:** Incomplete tasks = next AI can't execute them.
 
-**Correct Workflow:**
+---
 
+## Quick Reference
+
+**Before starting work:**
 ```bash
-# Step 1: Run pre-commit checks
-make pre-commit
-
-# Step 2: Stage and commit
-git add -A
-git commit -m "feat: description"
-
-# Step 3: Check command status
-# If exit code != 0:
-git add -A                      # Re-stage auto-fixes
-git commit --amend --no-edit    # Amend commit
-
-# Step 4: Verify exit code 0, then push
-git push origin <branch>
+make task-start N={N}              # Automated pre-work (Rule 1)
+make verify-prework N={N}          # Verify pre-work
 ```
 
-**Pre-commit hook behavior:**
+**Before committing code:**
+```bash
+make fix                           # Auto-fix linting
+make check-code-patterns           # Check past incident patterns (Rule 3)
+make check-file-sizes              # Check file sizes (Rule 6)
+make check-docs-updates            # Check if docs need updates (Rule 5)
+make check-git-workflow            # Check commit format, branch naming
+make pre-commit                    # Run all hooks (Rule 2 - includes git workflow check)
+```
 
-- Exit 0 = Success, ready to push
-- Exit 1 = Failed OR auto-fixed files (must re-stage)
-- Auto-fixes are NOT automatically staged
+**Before completing task:**
+```bash
+make task-update-checklist N={N}      # Mark all checkboxes complete (optional, saves time)
+make check-institutional-memory N={N}  # Verify memory updates (Rule 4)
+make check-integration N={N}            # Verify integration checklist
+make verify-completion N={N}              # Verify completion checklist
+```
 
-**Tools:**
+**Before creating PR:**
+```bash
+make check-pr-readiness N={N}     # Verify PR requirements
+```
 
-- `make pre-commit` - Run all pre-commit hooks manually
-- Check your project's Makefile for additional commit verification tools
-
-**Enforcement:** AI agents MUST check command status before pushing
-
-**See:** Document pre-commit hook incidents in your project's lessons learned documentation
-
----
-
----
-
-## Rule 10: Code Review From Past Incidents
-
-**FORBIDDEN:**
-
-- ❌ Repeating patterns that caused past incidents (document in shadow_memory.md)
-- ❌ Bypassing safety checks that were added after previous failures
-- ❌ Direct file/database writes bypassing abstraction layers
-- ❌ Unmocked external API calls in tests
-- ❌ Using `git commit --no-verify` on code changes (only for docs-only commits)
-
-**REQUIRED:**
-
-Before submitting code, check for patterns from past incidents documented in shadow_memory.md:
-
-1. **Review shadow_memory.md** for project-specific patterns to avoid
-2. **Check for similar patterns** in your changes
-3. **Verify safety checks** are in place if they were added after past incidents
-4. **Ensure tests mock external dependencies** (APIs, databases, file systems)
-
-**How to maintain:**
-
-- When incidents occur, document the pattern in shadow_memory.md
-- Include: What happened, why it happened, how to avoid it
-- Reference the pattern in code review checklists
-- Update this rule if new critical patterns emerge
-
-**Why:** Learning from past mistakes prevents repeating them. Shadow memory captures institutional knowledge about what NOT to do.
+**Note:** Rule 4 (institutional memory) runs automatically in `make task-complete`.
 
 ---
 
-**Read this file:** When starting work, after completing work, or if uncertain about standards.  
-**Don't read frequently:** These are reference rules, not workflow steps (use GUIDELINES.md for workflow).
+## Integration with AI Workflow
 
-**Last Updated:** 2025-11-30 (Added Rule 10: Code Review From Past Incidents)
+**Automated checks run:**
+- Pre-commit hook: Rules 2, 6, 7, git workflow (automatic on every commit)
+- `make task-complete`: Rule 4, integration checklist, PR readiness (automatic when completing task)
+- Manual checks: Rules 3, 5 (run before committing code)
+
+**Key Principle:** Automation = Can't Skip. Manual rules = Easy to skip.
+
+**Last Updated:** 2025-12-05 (Automated enforcement system)

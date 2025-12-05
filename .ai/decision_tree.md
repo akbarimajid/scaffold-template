@@ -71,7 +71,7 @@ Is this new code?
           │
           └─ NO → Use Database (File storage deprecated)
 ```
-**Reference:** [.ai/patterns/state_management_pattern.md](cci:7://file:///Users/mbnfamily/majid-ws/algo-trading-journey/.ai/patterns/state_management_pattern.md:0:0-0:0)
+**Reference:** [.ai/patterns/state_management_pattern.md](.ai/patterns/state_management_pattern.md)
 ---
 ## Should I mock this in tests?
 **Decision Flow:**
@@ -91,7 +91,7 @@ Is it an external dependency?
           └─ NO → Use directly
                     - Pure functions → No mock needed
 ```
-**Reference:** [.ai/patterns/testing_pattern.md](cci:7://file:///Users/mbnfamily/majid-ws/algo-trading-journey/.ai/patterns/testing_pattern.md:0:0-0:0)
+**Reference:** [.ai/patterns/testing_pattern.md](.ai/patterns/testing_pattern.md)
 ---
 ## Should I add a Makefile command?
 **Decision Flow:**
@@ -124,7 +124,7 @@ Did I change core workflow?
           │
           └─ NO → No doc update needed
 ```
-**Reference:** [tasks/GUIDELINES.md](cci:7://file:///Users/mbnfamily/majid-ws/algo-trading-journey/tasks/GUIDELINES.md:0:0-0:0) Integration Checklist
+**Reference:** [tasks/GUIDELINES.md](../tasks/GUIDELINES.md) Integration Checklist
 ---
 ## Quick Reference
 | Decision | Answer |

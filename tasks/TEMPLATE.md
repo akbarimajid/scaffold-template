@@ -183,7 +183,8 @@ See "Integration Checklist" in `tasks/GUIDELINES.md` for:
 
 #### Task Tracking
 
-- [ ] **Task file:** All chunks marked complete (`[x]`)
+- [ ] **Optional:** Run `make task-update-checklist N={N}` to mark all checkboxes complete (before task-complete)
+- [ ] **Task file:** All chunks marked complete (`[x]`) - use `make task-update-checklist N={N}` to automate
 - [ ] **BACKLOG.md:** Task ready to move to completed (or already in PR)
 
 #### Final Verification

@@ -199,17 +199,17 @@ state_manager.save()
 3. **Update BACKLOG.md** - Add to appropriate priority section
 
 ### During Implementation
-1. **Rename task** - `{N}-in-progress-{name}.md`
-2. **Create branch** - `feature/task-{N}-{short-name}`
-3. **Work in chunks** - Code → Commit → Push → Wait
-4. **Run checks** - `make ci-checks` before commit
+1. **Automated:** Run `make task-start N={N}` (renames file, updates BACKLOG, creates branch)
+2. **Work in chunks** - Code → Commit → Push → Wait
+3. **Run checks** - `make pre-commit` before commit
 
 ### After Implementation
-1. **Integration checklist** - See `tasks/GUIDELINES.md`
-2. **Run tests** - Ensure all tests pass
-3. **Update documentation** - DECISIONS.md, LESSONS_LEARNED.md, shadow_memory.md
-3. **Update task** - Mark complete, add notes
-4. **Update BACKLOG.md** - Move to completed section
+1. **Optional:** Run `make task-update-checklist N={N}` to mark all checkboxes complete
+2. **Automated:** Run `make task-complete N={N}` (renames file, updates BACKLOG, adds completion template)
+3. **Integration checklist** - See `tasks/GUIDELINES.md` (validation runs automatically)
+4. **Run tests** - Ensure all tests pass
+5. **Update documentation** - DECISIONS.md, LESSONS_LEARNED.md, shadow_memory.md
+6. **Optional:** Run `make update-shadow-memory task={N}` to extract patterns from completion notes
 
 ---
 
