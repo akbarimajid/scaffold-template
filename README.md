@@ -2,12 +2,15 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](CHANGELOG.md)
 
 **Build your MVP with AI that never forgets**
 
 This template implements the **Shadow AI system** - institutional memory for AI-assisted development.
 
-> **Note:** This template is optimized for **Python projects** (v1.0). The Shadow AI system itself is language-agnostic, but automation scripts and pre-commit hooks are Python-focused. Support for other languages coming in future versions.
+**Current Version:** v1.1.0 (See [CHANGELOG.md](CHANGELOG.md) for details)
+
+> **Note:** This template is optimized for **Python projects** (v1.1.0). The Shadow AI system itself is language-agnostic, but automation scripts and pre-commit hooks are Python-focused. Support for other languages coming in future versions.
 
 ## Problem Solved
 
@@ -16,17 +19,21 @@ AI coding tools lose context after 1 session. This system preserves 100% context
 ## What's Included
 
 - **Shadow AI System:** `.ai/shadow_memory.md` (87% token reduction) - Language agnostic
+- **Function Registry:** `.ai/function_registry/README.md` (80-90% token reduction for function discovery) - Language agnostic
+- **Quick Context Files:** `.ai/quick_context/` (focused guides for AI agents) - Language agnostic
 - **Task Management:** `tasks/` directory with proven workflow - Language agnostic
 - **AI Policies:** `docs/policies/` for consistent agent behavior - Language agnostic
-- **Automation:** `Makefile` for common commands - Python-focused (v1.0)
+- **Automation:** `Makefile` for common commands - Python-focused (v1.1.0)
 - **Pre-commit Hooks:** Generic file checks + optional Python (Black, Flake8)
 
 ## Quick Start
 
 1. **Clone this repo**
 2. **Setup:** Follow [SETUP.md](SETUP.md) for detailed installation instructions
-3. **Read Context:** Read `.ai/shadow_memory.md` to understand the system
-   - **AI agents can auto-update it:** See [docs/AI_AUTO_UPDATE_SHADOW_MEMORY.md](docs/AI_AUTO_UPDATE_SHADOW_MEMORY.md) for a prompt you can give your AI agent to automatically fill in project details
+3. **Initialize AI Context:** Use the AI prompt to auto-populate project details
+   - **AI agents can auto-update:** See [docs/AI_AUTO_UPDATE_SHADOW_MEMORY.md](docs/AI_AUTO_UPDATE_SHADOW_MEMORY.md) for a prompt that automatically fills in:
+     - `.ai/shadow_memory.md` with project details
+     - `.ai/function_registry/README.md` with your project's core functions
 4. **Create Task:** Copy `tasks/TEMPLATE.md` to `tasks/01-pending-my-feature.md`
 5. **Start Building:** Use your AI agent (Cursor, Windsurf, etc.) to execute the task
 6. **Update Memory:** After completing tasks, run `make update-shadow-memory task={N}` to extract patterns and lessons

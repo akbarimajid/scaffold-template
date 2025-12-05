@@ -48,8 +48,58 @@ if [ ! -f "$COMPLETED_FILE" ]; then
   exit 1
 fi
 
-# Cleanup: Remove any leftover in-progress files (in case editor saved to old name)
+# Cleanup: Remove any leftover in-progress files and backup files (in case editor saved to old name)
 find tasks -name "${N}-in-progress-*.md" -delete 2>/dev/null || true
+find tasks -name "${N}-in-progress-*.md.bak" -delete 2>/dev/null || true
+find tasks -name "${N}-completed-*.md.bak" -delete 2>/dev/null || true
+find tasks -name "${N}-pending-*.md.bak" -delete 2>/dev/null || true
+
+# Update status field and add completion timestamp
+echo "📝 Updating status field and adding completion timestamp..."
+COMPLETION_TIME=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+
+# Update status field
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  sed -i.bak "s/^\*\*Status:\*\* in-progress/\*\*Status:\*\* completed/g" "$COMPLETED_FILE"
+  sed -i.bak "s/^\*\*Status:\*\* in-progress |/\*\*Status:\*\* completed |/g" "$COMPLETED_FILE"
+  rm -f "$COMPLETED_FILE.bak"
+else
+  sed -i "s/^\*\*Status:\*\* in-progress/\*\*Status:\*\* completed/g" "$COMPLETED_FILE"
+  sed -i "s/^\*\*Status:\*\* in-progress |/\*\*Status:\*\* completed |/g" "$COMPLETED_FILE"
+fi
+
+# Add completion timestamp on a new line after Status (not merged with other fields)
+# Use awk for more reliable line insertion
+if ! grep -q "^\*\*Completed:\*\*" "$COMPLETED_FILE"; then
+  # Find the Status line and insert Completed on the next line
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    awk -v ts="$COMPLETION_TIME" '
+      /^\*\*Status:\*\* completed/ {
+        print
+        print "**Completed:** " ts
+        next
+      }
+      { print }
+    ' "$COMPLETED_FILE" > "$COMPLETED_FILE.tmp" && mv "$COMPLETED_FILE.tmp" "$COMPLETED_FILE"
+  else
+    awk -v ts="$COMPLETION_TIME" '
+      /^\*\*Status:\*\* completed/ {
+        print
+        print "**Completed:** " ts
+        next
+      }
+      { print }
+    ' "$COMPLETED_FILE" > "$COMPLETED_FILE.tmp" && mv "$COMPLETED_FILE.tmp" "$COMPLETED_FILE"
+  fi
+else
+  # Update existing timestamp
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i.bak "s/^\*\*Completed:\*\*.*/\*\*Completed:\*\* $COMPLETION_TIME/g" "$COMPLETED_FILE"
+    rm -f "$COMPLETED_FILE.bak"
+  else
+    sed -i "s/^\*\*Completed:\*\*.*/\*\*Completed:\*\* $COMPLETION_TIME/g" "$COMPLETED_FILE"
+  fi
+fi
 
 # Add completion notes template if not present
 if ! grep -q "## Completion Notes" "$COMPLETED_FILE"; then

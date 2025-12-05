@@ -133,6 +133,96 @@
 
 ---
 
+---
+
+## Key Patterns from Production Use
+
+### Pattern 1: Automation-First Enforcement
+
+**What Works:**
+- Automated tools can't be skipped (unlike manual checklists)
+- `make task-start N={N}` automates pre-work (5 steps → 1 command)
+- `make task-complete N={N}` automates completion (4 steps → 1 command)
+- Validation scripts run automatically in `make task-complete` and pre-commit hooks
+
+**Key Insight:** Automation = Can't Skip. Manual rules = Easy to skip.
+
+**Evidence:**
+- 80% token reduction in workflow automation (285 vs 1030 tokens)
+- 65% reduction per task start (632 → 220 lines)
+- Validation catches issues automatically (can't be bypassed)
+
+**Implementation:**
+- Use `make task-start N={N}` before ANY code changes
+- Use `make task-complete N={N}` when finishing tasks
+- Validation tools run automatically (no manual steps)
+
+---
+
+### Pattern 2: Token Optimization Compounds
+
+**What Works:**
+- Small token reductions add up across many AI sessions
+- Function registry: 50 tokens vs 200-500 for semantic search (80-90% reduction)
+- Quick context files: 200 tokens vs 1000+ for full docs (80% reduction)
+- Hierarchical docs: Extract guides, keep index minimal (on-demand loading)
+
+**Key Insight:** Every optimization accumulates. Prioritize token efficiency.
+
+**Evidence:**
+- Git operations: 95% reduction (1450 → 75 tokens)
+- Documentation: 31-45% reduction
+- Task automation: 72% reduction (285 vs 1030 tokens)
+
+**Implementation:**
+- Use function registry for function discovery
+- Read quick context files first, full docs on-demand
+- Keep main docs as indexes, extract detailed guides
+
+---
+
+### Pattern 3: Hierarchical Documentation
+
+**What Works:**
+- Extract detailed guides to separate files
+- Keep main docs as minimal indexes (~100 lines)
+- Reference guides from multiple places (DRY principle)
+- Load guides on-demand (not upfront)
+
+**Key Insight:** Index files are fast to read, detailed guides are loaded when needed.
+
+**Evidence:**
+- GUIDELINES.md: 632 → 220 lines (65% reduction)
+- Guides in `tasks/guides/` directory (git-workflow.md, integration.md, pull-requests.md)
+- Better discoverability (separate files easier to find)
+
+**Implementation:**
+- Keep main docs under 220 lines
+- Extract detailed guides to separate files
+- Reference guides from multiple places (don't duplicate)
+
+---
+
+### Pattern 4: Task Checklist Automation
+
+**What Works:**
+- `make task-update-checklist N={N}` marks all checkboxes complete
+- Saves time and reduces errors
+- Optional but recommended before task completion
+
+**Key Insight:** Automation reduces manual work and prevents incomplete checkboxes.
+
+**Evidence:**
+- ~2 minutes saved per task
+- Prevents incomplete checkboxes in completed tasks
+- Reduces errors from manual checkbox updates
+
+**Implementation:**
+- Run `make task-update-checklist N={N}` before `make task-complete`
+- Optional but recommended for consistency
+
+---
+
 **How to add lessons:**
 - After completing tasks with significant learnings
 - When identifying patterns or anti-patterns

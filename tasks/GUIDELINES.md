@@ -11,6 +11,7 @@ Quick reference for task workflows. **See `docs/CHECKLISTS.md` for comprehensive
 | Command | Description |
 |---------|-------------|
 | `make task-start N={ID}` | Start task: rename pending → in-progress, update BACKLOG |
+| `make task-update-checklist N={ID}` | Mark all checkboxes as complete (before task completion) |
 | `make task-complete N={ID}` | Complete task: rename in-progress → completed, add completion template |
 | `make task-status N={ID}` | Show task status, file location, and blocker status |
 | `make check-task-blockers N={ID}` | Verify blocker tasks are completed (exit 0 if ready, 1 if blocked) |
@@ -35,9 +36,10 @@ Quick reference for task workflows. **See `docs/CHECKLISTS.md` for comprehensive
 7. Test locally when applicable
 8. Complete integration (see below)
 9. Fill in completion notes (what worked, patterns, lessons)
-10. **Automated:** Run `make task-complete N={N}` (renames file, updates BACKLOG, adds completion template)
-11. **Optional:** Run `make update-shadow-memory task={N}` to update shadow memory
-12. Create PR
+10. **Optional:** Run `make task-update-checklist N={N}` to mark all checkboxes complete (saves time, reduces errors)
+11. **Automated:** Run `make task-complete N={N}` (renames file, updates BACKLOG, adds completion template)
+12. **Optional:** Run `make update-shadow-memory task={N}` to update shadow memory
+13. Create PR
 
 **Commit format:** `{type}: {description} (Task {NUMBER})`  
 **Types:** `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `integrate`
