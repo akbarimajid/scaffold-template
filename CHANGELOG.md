@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [1.1.0] - 2025-12-05
+## [1.3.0] - 2025-12-05
 
 ### Added
 - **Function Registry** (`.ai/function_registry/README.md`)

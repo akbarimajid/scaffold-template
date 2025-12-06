@@ -2,15 +2,15 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)](CHANGELOG.md)
 
 **Build your MVP with AI that never forgets**
 
 This template implements the **Shadow AI system** - institutional memory for AI-assisted development.
 
-**Current Version:** v1.1.0 (See [CHANGELOG.md](CHANGELOG.md) for details)
+**Current Version:** v1.3.0 (See [CHANGELOG.md](CHANGELOG.md) for details)
 
-> **Note:** This template is optimized for **Python projects** (v1.1.0). The Shadow AI system itself is language-agnostic, but automation scripts and pre-commit hooks are Python-focused. Support for other languages coming in future versions.
+> **Note:** This template is optimized for **Python projects** (v1.3.0). The Shadow AI system itself is language-agnostic, but automation scripts and pre-commit hooks are Python-focused. Support for other languages coming in future versions.
 
 ## Problem Solved
 
@@ -23,7 +23,7 @@ AI coding tools lose context after 1 session. This system preserves 100% context
 - **Quick Context Files:** `.ai/quick_context/` (focused guides for AI agents) - Language agnostic
 - **Task Management:** `tasks/` directory with proven workflow - Language agnostic
 - **AI Policies:** `docs/policies/` for consistent agent behavior - Language agnostic
-- **Automation:** `Makefile` for common commands - Python-focused (v1.1.0)
+- **Automation:** `Makefile` for common commands - Python-focused (v1.3.0)
 - **Pre-commit Hooks:** Generic file checks + optional Python (Black, Flake8)
 
 ## Quick Start
